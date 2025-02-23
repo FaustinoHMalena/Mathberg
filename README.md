@@ -4,7 +4,7 @@
 
 Design a gamified mobile mathematics learning app for students of all grade levels that:
 
-Structures content into progressive skill courses with 20 lessons per each topic and below are the topics taught in each grade level:
+Structures content into progressive skill courses with 20 lessons per each topic (with real world practical exercises) and below are the topics taught in each grade level:
 
 ### Kindergarten (K)
 - Counting and Cardinality: Counting to 100, understanding numbers, and comparing quantities.
