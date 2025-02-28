@@ -2,30 +2,36 @@ import React, { useState } from 'react';
 import LessonTemplate from './LessonTemplate';
 
 const exercises = [
-  { type: 'drawing', question: 'Draw 5 ice cream cones.', instruction: 'Use the drawing tool to draw 5 ice cream cones.' },
-  { type: 'multipleChoice', question: 'How many ice cream cones are in the picture?', options: [4, 5, 6, 7], correctAnswer: 5 },
-  { type: 'touch', question: 'Tap on the screen to count to 5.', countTo: 5 },
-  { type: 'drawing', question: 'Draw 4 bicycles.', instruction: 'Use the drawing tool to draw 4 bicycles.' },
-  { type: 'multipleChoice', question: 'How many bicycles are in the picture?', options: [3, 4, 5, 6], correctAnswer: 4 },
-  { type: 'touch', question: 'Tap on the screen to count to 10.', countTo: 10 },
-  { type: 'drawing', question: 'Draw 3 kites.', instruction: 'Use the drawing tool to draw 3 kites.' },
-  { type: 'multipleChoice', question: 'How many kites are in the picture?', options: [2, 3, 4, 5], correctAnswer: 3 },
+  { type: 'drawing', question: 'Draw 11 apples.', instruction: 'Use the drawing tool to draw 11 apples.' },
+  { type: 'multipleChoice', question: 'How many apples are in the picture?', options: [10, 11, 12, 13], correctAnswer: 11 },
+  { type: 'touch', question: 'Tap on the screen to count to 11.', countTo: 11 },
+  { type: 'drawing', question: 'Draw 12 cats.', instruction: 'Use the drawing tool to draw 12 cats.' },
+  { type: 'multipleChoice', question: 'How many cats are in the picture?', options: [11, 12, 13, 14], correctAnswer: 12 },
+  { type: 'touch', question: 'Tap on the screen to count to 12.', countTo: 12 },
+  { type: 'drawing', question: 'Draw 13 dogs.', instruction: 'Use the drawing tool to draw 13 dogs.' },
+  { type: 'multipleChoice', question: 'How many dogs are in the picture?', options: [12, 13, 14, 15], correctAnswer: 13 },
+  { type: 'touch', question: 'Tap on the screen to count to 13.', countTo: 13 },
+  { type: 'drawing', question: 'Draw 14 fish.', instruction: 'Use the drawing tool to draw 14 fish.' },
+  { type: 'multipleChoice', question: 'How many fish are in the picture?', options: [13, 14, 15, 16], correctAnswer: 14 },
+  { type: 'touch', question: 'Tap on the screen to count to 14.', countTo: 14 },
+  { type: 'drawing', question: 'Draw 15 birds.', instruction: 'Use the drawing tool to draw 15 birds.' },
+  { type: 'multipleChoice', question: 'How many birds are in the picture?', options: [14, 15, 16, 17], correctAnswer: 15 },
   { type: 'touch', question: 'Tap on the screen to count to 15.', countTo: 15 },
-  { type: 'drawing', question: 'Draw 6 balloons.', instruction: 'Use the drawing tool to draw 6 balloons.' },
-  { type: 'multipleChoice', question: 'How many balloons are in the picture?', options: [5, 6, 7, 8], correctAnswer: 6 },
+  { type: 'drawing', question: 'Draw 16 flowers.', instruction: 'Use the drawing tool to draw 16 flowers.' },
+  { type: 'multipleChoice', question: 'How many flowers are in the picture?', options: [15, 16, 17, 18], correctAnswer: 16 },
+  { type: 'touch', question: 'Tap on the screen to count to 16.', countTo: 16 },
+  { type: 'drawing', question: 'Draw 17 butterflies.', instruction: 'Use the drawing tool to draw 17 butterflies.' },
+  { type: 'multipleChoice', question: 'How many butterflies are in the picture?', options: [16, 17, 18, 19], correctAnswer: 17 },
+  { type: 'touch', question: 'Tap on the screen to count to 17.', countTo: 17 },
+  { type: 'drawing', question: 'Draw 18 bees.', instruction: 'Use the drawing tool to draw 18 bees.' },
+  { type: 'multipleChoice', question: 'How many bees are in the picture?', options: [17, 18, 19, 20], correctAnswer: 18 },
+  { type: 'touch', question: 'Tap on the screen to count to 18.', countTo: 18 },
+  { type: 'drawing', question: 'Draw 19 ants.', instruction: 'Use the drawing tool to draw 19 ants.' },
+  { type: 'multipleChoice', question: 'How many ants are in the picture?', options: [18, 19, 20, 21], correctAnswer: 19 },
+  { type: 'touch', question: 'Tap on the screen to count to 19.', countTo: 19 },
+  { type: 'drawing', question: 'Draw 20 leaves.', instruction: 'Use the drawing tool to draw 20 leaves.' },
+  { type: 'multipleChoice', question: 'How many leaves are in the picture?', options: [19, 20, 21, 22], correctAnswer: 20 },
   { type: 'touch', question: 'Tap on the screen to count to 20.', countTo: 20 },
-  { type: 'drawing', question: 'Draw 7 cupcakes.', instruction: 'Use the drawing tool to draw 7 cupcakes.' },
-  { type: 'multipleChoice', question: 'How many cupcakes are in the picture?', options: [6, 7, 8, 9], correctAnswer: 7 },
-  { type: 'touch', question: 'Tap on the screen to count to 25.', countTo: 25 },
-  { type: 'drawing', question: 'Draw 8 stars.', instruction: 'Use the drawing tool to draw 8 stars.' },
-  { type: 'multipleChoice', question: 'How many stars are in the picture?', options: [7, 8, 9, 10], correctAnswer: 8 },
-  { type: 'touch', question: 'Tap on the screen to count to 30.', countTo: 30 },
-  { type: 'drawing', question: 'Draw 9 trees.', instruction: 'Use the drawing tool to draw 9 trees.' },
-  { type: 'multipleChoice', question: 'How many trees are in the picture?', options: [8, 9, 10, 11], correctAnswer: 9 },
-  { type: 'touch', question: 'Tap on the screen to count to 35.', countTo: 35 },
-  { type: 'drawing', question: 'Draw 10 cars.', instruction: 'Use the drawing tool to draw 10 cars.' },
-  { type: 'multipleChoice', question: 'How many cars are in the picture?', options: [9, 10, 11, 12], correctAnswer: 10 },
-  { type: 'touch', question: 'Tap on the screen to count to 40.', countTo: 40 },
 ];
 
 const renderExercise = (exercise, index) => {
@@ -59,12 +65,12 @@ const renderExercise = (exercise, index) => {
   }
 };
 
-const CountingLesson2 = () => {
+const CountingLesson3 = () => {
   return (
-    <LessonTemplate lessonNumber={2}>
+    <LessonTemplate lessonNumber={3}>
       {exercises.map((exercise, index) => renderExercise(exercise, index))}
     </LessonTemplate>
   );
 };
 
-export default CountingLesson2;
+export default CountingLesson3;
