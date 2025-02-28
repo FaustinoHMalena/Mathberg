@@ -65,12 +65,12 @@ const renderExercise = (exercise, index) => {
   }
 };
 
-const CountingLesson3 = () => {
+const CountingLesson2 = () => {
   return (
-    <LessonTemplate lessonNumber={3}>
+    <LessonTemplate lessonNumber={2}>
       {exercises.map((exercise, index) => renderExercise(exercise, index))}
     </LessonTemplate>
   );
 };
 
-export default CountingLesson3;
+export default CountingLesson2;
