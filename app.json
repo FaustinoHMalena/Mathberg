@@ -1,5 +1,10 @@
 {
   "expo": {
+
+        "assetBundlePatterns": [
+      "**/*",
+      "assets/mascot/*.png"
+    ]
     "name": "Mathberg",
     "slug": "bolt-expo-nativewind",
     "version": "1.0.0",
