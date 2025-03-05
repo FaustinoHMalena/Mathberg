@@ -1,5 +1,5 @@
 // screens/PracticeScreen.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import { useUser } from '../contexts/UserContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -7,24 +7,46 @@ import TopicCard from '../components/TopicCard';
 import LoadingOverlay from '../components/LoadingOverlay';
 import PiperMascot from '../components/PiperMascot';
 
-const PracticeScreen = () => {
+type Topic = {
+  id: string;
+  title: string;
+  grade: string;
+  lessons: Array<{
+    id: string;
+    title: string;
+  }>;
+};
+
+const PracticeScreen = ({ navigation }) => {
   const { userProgress } = useUser();
   const { colors } = useTheme();
-  const [topics, setTopics] = React.useState<Topic[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    // Simulated API call
-    setTimeout(() => {
-      setTopics(require('../data/topics.json'));
-      setLoading(false);
-    }, 1500);
+  useEffect(() => {
+    // Load topics from local JSON file
+    const loadTopics = async () => {
+      try {
+        const topicsData = require('../data/topics.json');
+        setTopics(topicsData);
+      } catch (error) {
+        console.error('Failed to load topics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadTopics();
   }, []);
 
-  const getProgressPercentage = (topicId: string) => {
-    const completed = userProgress.currentLessons[topicId] || 0;
-    const total = topics.find(t => t.id === topicId)?.lessons.length || 1;
-    return (completed / total) * 100;
+  const getTopicProgress = (topicId: string) => {
+    const completedLessons = Object.keys(userProgress.currentLessons[topicId] || {}).length;
+    const totalLessons = topics.find(t => t.id === topicId)?.lessons.length || 0;
+    return totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+  };
+
+  const handleTopicPress = (topicId: string) => {
+    navigation.navigate('LessonSelection', { topicId });
   };
 
   if (loading) return <LoadingOverlay />;
@@ -32,7 +54,7 @@ const PracticeScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <PiperMascot />
-      <Text style={[styles.title, { color: colors.text }]}>Choose a Topic</Text>
+      <Text style={[styles.title, { color: colors.text }]}>Practice Topics</Text>
       
       <FlatList
         data={topics}
@@ -42,8 +64,8 @@ const PracticeScreen = () => {
           <TopicCard
             title={item.title}
             grade={item.grade}
-            progress={getProgressPercentage(item.id)}
-            onPress={() => {/* Navigate to lesson selection */}}
+            progress={getTopicProgress(item.id)}
+            onPress={() => handleTopicPress(item.id)}
             isLocked={!userProgress.currentLessons[item.id]}
           />
         )}
