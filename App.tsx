@@ -9,6 +9,9 @@ import PiperMascot from './components/PiperMascot';
 
 const Stack = createNativeStackNavigator();
 
+// Only if you want Piper visible everywhere
+<PiperMascot />
+
 export default function App() {
   return (
     <UserProvider>
