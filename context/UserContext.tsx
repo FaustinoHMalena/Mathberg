@@ -29,6 +29,11 @@ type UserProgress = {
     learningStyle: 'visual' | 'kinesthetic' | 'auditory';
     difficultyLevel: number;
   };
+  settings: {
+    darkMode: boolean;
+    soundEnabled: boolean;
+    notificationTime: string;
+  };
 };
 
 type UserContextType = {
@@ -39,6 +44,7 @@ type UserContextType = {
   recordAnswer: (isCorrect: boolean, modality: 'visual' | 'kinesthetic') => void;
   completeDailyChallenge: () => void;
   updateLearningStyle: (style: 'visual' | 'kinesthetic' | 'auditory') => void;
+  updateSettings: (settings: Partial<UserProgress['settings']>) => void;
 };
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
@@ -65,6 +71,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     adaptiveProfile: {
       learningStyle: 'visual',
       difficultyLevel: 1
+    },
+    settings: {
+      darkMode: false,
+      soundEnabled: true,
+      notificationTime: '18:00'
     }
   });
 
@@ -85,6 +96,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           adaptiveProfile: {
             learningStyle: detectLearningStyle(savedProgress),
             difficultyLevel: Math.min(Math.floor(savedProgress.points / 1000) + 1, 5)
+          },
+          settings: {
+            darkMode: savedProgress.settings?.darkMode || false,
+            soundEnabled: savedProgress.settings?.soundEnabled ?? true,
+            notificationTime: savedProgress.settings?.notificationTime || '18:00'
           }
         });
       }
@@ -166,6 +182,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
   };
 
+  const updateSettings = (settings: Partial<UserProgress['settings']>) => {
+    setUserProgress(prev => ({
+      ...prev,
+      settings: {
+        ...prev.settings,
+        ...settings
+      }
+    }));
+  };
+
   return (
     <UserContext.Provider value={{ 
       userProgress,
@@ -174,7 +200,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       completeLesson,
       recordAnswer,
       completeDailyChallenge,
-      updateLearningStyle
+      updateLearningStyle,
+      updateSettings
     }}>
       {children}
     </UserContext.Provider>
