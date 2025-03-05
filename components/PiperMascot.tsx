@@ -10,6 +10,13 @@ const PiperMascot = () => {
   const bounceValue = new Animated.Value(0);
   const [isCelebrating, setIsCelebrating] = useState(false);
 
+  // In PiperMascot.tsx
+<Image
+  ...
+  accessibilityRole="image"
+  accessibilityHint="Tap Piper for encouragement and bonus points!"
+/>
+  
   // Bounce animation
   Animated.loop(
     Animated.sequence([
@@ -27,6 +34,8 @@ const PiperMascot = () => {
       }),
     ])
   ).start();
+
+  
 
   // Celebration interaction
   const handlePress = () => {
