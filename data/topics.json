@@ -1,0 +1,24 @@
+// data/topics.json
+{
+  "topics": [
+    {
+      "id": "k-counting",
+      "grade": "Kindergarten",
+      "title": "Counting and Cardinality",
+      "lessons": [
+        {
+          "id": "lesson-1",
+          "title": "Counting to 10",
+          "exercises": [
+            {
+              "type": "multiple_choice",
+              "question": "How many apples do you see?",
+              "options": ["3", "5", "7"],
+              "correctAnswer": "5"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
