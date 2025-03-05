@@ -1,38 +1,66 @@
 // components/PiperMascot.tsx
-import React from 'react';
-import { Animated, Easing, View } from 'react-native';
+import React, { useState } from 'react';
+import { Animated, Easing, TouchableOpacity, Dimensions } from 'react-native';
+import { useUser } from '../contexts/UserContext';
+
+const { width } = Dimensions.get('window');
 
 const PiperMascot = () => {
+  const { addPoints } = useUser();
   const bounceValue = new Animated.Value(0);
+  const [isCelebrating, setIsCelebrating] = useState(false);
 
+  // Bounce animation
   Animated.loop(
     Animated.sequence([
       Animated.timing(bounceValue, {
-        toValue: 20,
+        toValue: 10,
         duration: 1000,
-        easing: Easing.linear,
+        easing: Easing.elastic(2),
         useNativeDriver: true,
       }),
       Animated.timing(bounceValue, {
         toValue: 0,
-        duration: 1000,
+        duration: 800,
         easing: Easing.linear,
         useNativeDriver: true,
       }),
     ])
   ).start();
 
+  // Celebration interaction
+  const handlePress = () => {
+    if (!isCelebrating) {
+      setIsCelebrating(true);
+      addPoints(5); // Reward points for interaction
+      setTimeout(() => setIsCelebrating(false), 2000);
+    }
+  };
+
   return (
-    <View style={{ position: 'absolute', top: 50, right: 20, zIndex: 1 }}>
+    <TouchableOpacity 
+      onPress={handlePress}
+      style={{
+        position: 'absolute',
+        top: width * 0.05,
+        right: width * 0.03,
+        zIndex: 100,
+      }}
+      accessibilityLabel="Interact with Piper the Penguin"
+    >
       <Animated.Image
-        source={require('../assets/piper-penguin.png')}
+        source={require('../assets/mascot/piper-penguin.png')}
         style={{
-          width: 100,
-          height: 100,
-          transform: [{ translateY: bounceValue }],
+          width: width * 0.15,
+          height: width * 0.15,
+          transform: [
+            { translateY: bounceValue },
+            { scale: isCelebrating ? 1.2 : 1 }
+          ],
         }}
+        accessibilityIgnoresInvertColors
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 
