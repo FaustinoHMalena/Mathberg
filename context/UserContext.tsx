@@ -1,86 +1,46 @@
-// context/UserContext.tsx (Enhanced)
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { saveProgress, loadProgress } from '../services/ProgressService';
-import { calculateStreak, formatStreakDate } from '../utils/StreakCounter';
+// context/UserContext.tsx (Final Enhancements)
+import { formatStreakDate } from '../utils/StreakCounter';
 
+// Update UserProgress type
 type UserProgress = {
-  points: number;
-  badges: string[];
-  currentLessons: Record<string, number>;
-  dailyStreak: number;
-  lastActiveDate: string;
-  performance: {
-    correct: number;
-    total: number;
+  // ... existing properties ...
+  dailyChallenge: {
+    completed: boolean;
+    streak: number;
+    lastCompleted: string;
   };
 };
 
-const UserContext = createContext<{
-  userProgress: UserProgress;
-  addPoints: (points: number) => void;
-  unlockBadge: (badgeId: string) => void;
-  completeLesson: (topicId: string, lessonId: string) => void;
-  recordAnswer: (isCorrect: boolean) => void;
-}>(null!);
+// Update initializeProgress
+const initializeProgress = async () => {
+  const savedProgress = await loadProgress();
+  const today = formatStreakDate(new Date());
+  
+  if (savedProgress) {
+    setUserProgress({
+      ...savedProgress,
+      dailyStreak: calculateStreak(savedProgress.lastActiveDate),
+      dailyChallenge: {
+        ...savedProgress.dailyChallenge,
+        streak: savedProgress.dailyChallenge.lastCompleted === today ? 
+          savedProgress.dailyChallenge.streak : 0
+      }
+    });
+  }
+};
 
-export function UserProvider({ children }) {
-  const [userProgress, setUserProgress] = useState<UserProgress>({
-    points: 0,
-    badges: [],
-    currentLessons: {},
-    dailyStreak: 0,
-    lastActiveDate: formatStreakDate(new Date()),
-    performance: { correct: 0, total: 0 },
-  });
-
-  useEffect(() => {
-    const initializeProgress = async () => {
-      const savedProgress = await loadProgress();
-      if (savedProgress) {
-        setUserProgress({
-          ...savedProgress,
-          dailyStreak: calculateStreak(savedProgress.lastActiveDate),
-        });
+// Add daily challenge completion
+const completeDailyChallenge = () => {
+  setUserProgress(prev => {
+    const today = formatStreakDate(new Date());
+    return {
+      ...prev,
+      dailyChallenge: {
+        completed: true,
+        streak: prev.dailyChallenge.lastCompleted === today ? 
+          prev.dailyChallenge.streak : prev.dailyChallenge.streak + 1,
+        lastCompleted: today
       }
     };
-    initializeProgress();
-  }, []);
-
-  useEffect(() => {
-    saveProgress(userProgress);
-  }, [userProgress]);
-
-  // ... existing functions ...
-
-  const completeLesson = (topicId: string, lessonId: string) => {
-    setUserProgress(prev => ({
-      ...prev,
-      currentLessons: {
-        ...prev.currentLessons,
-        [topicId]: (prev.currentLessons[topicId] || 0) + 1
-      }
-    }));
-  };
-
-  const recordAnswer = (isCorrect: boolean) => {
-    setUserProgress(prev => ({
-      ...prev,
-      performance: {
-        correct: prev.performance.correct + (isCorrect ? 1 : 0),
-        total: prev.performance.total + 1
-      }
-    }));
-  };
-
-  return (
-    <UserContext.Provider value={{ 
-      userProgress, 
-      addPoints, 
-      unlockBadge,
-      completeLesson,
-      recordAnswer
-    }}>
-      {children}
-    </UserContext.Provider>
-  );
-}
+  });
+};
