@@ -1,45 +1,49 @@
-// screens/SettingsScreen.tsx
-import React, { useContext } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+// screens/SettingsScreen.tsx (Enhanced)
+import React from 'react';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { useUser } from '../contexts/UserContext';
 import SettingsToggle from '../components/SettingsToggle';
+import TimePicker from '../components/TimePicker';
+import ThemedButton from '../components/ThemedButton';
+import { useTheme } from '../contexts/ThemeContext';
 
 const SettingsScreen = () => {
-  const { userProgress, updateLearningStyle } = useUser();
+  const { userProgress, updateSettings } = useUser();
+  const { colors } = useTheme();
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Learning Preferences</Text>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.section, { backgroundColor: colors.card }]}>
+        <Text style={[styles.sectionTitle, { color: colors.primary }]}>Preferences</Text>
+        
         <SettingsToggle
           label="Dark Mode"
-          value={userProgress.settings?.darkMode || false}
+          value={userProgress.settings.darkMode}
           onToggle={(value) => updateSettings({ darkMode: value })}
         />
+        
         <SettingsToggle
           label="Sound Effects"
-          value={userProgress.settings?.soundEnabled || true}
+          value={userProgress.settings.soundEnabled}
           onToggle={(value) => updateSettings({ soundEnabled: value })}
+        />
+
+        <Text style={[styles.label, { color: colors.text }]}>Daily Reminder Time</Text>
+        <TimePicker
+          time={new Date(`2000-01-01T${userProgress.settings.notificationTime}`)}
+          onChange={(newTime) => {
+            const hours = newTime.getHours().toString().padStart(2, '0');
+            const minutes = newTime.getMinutes().toString().padStart(2, '0');
+            updateSettings({ notificationTime: `${hours}:${minutes}` });
+          }}
         />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Learning Style</Text>
-        <View style={styles.styleOptions}>
-          {['visual', 'kinesthetic', 'auditory'].map((style) => (
-            <TouchableOpacity
-              key={style}
-              style={[
-                styles.styleButton,
-                userProgress.adaptiveProfile.learningStyle === style && 
-                styles.selectedStyle
-              ]}
-              onPress={() => updateLearningStyle(style)}
-            >
-              <Text style={styles.styleText}>{style.charAt(0).toUpperCase() + style.slice(1)}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+      <View style={[styles.section, { backgroundColor: colors.card }]}>
+        <ThemedButton
+          title="Reset Progress"
+          onPress={() => {/* Implement reset logic */}}
+        />
       </View>
     </ScrollView>
   );
@@ -47,35 +51,22 @@ const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20
+    padding: 16,
   },
   section: {
-    marginBottom: 32
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: 'bold',
     marginBottom: 16,
-    color: '#2B78E4'
   },
-  styleOptions: {
-    flexDirection: 'row',
-    gap: 12
+  label: {
+    fontSize: 16,
+    marginVertical: 8,
   },
-  styleButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    backgroundColor: '#F0F4FF',
-    borderWidth: 1,
-    borderColor: '#2B78E4'
-  },
-  selectedStyle: {
-    backgroundColor: '#2B78E4'
-  },
-  styleText: {
-    color: '#2B78E4'
-  }
 });
 
 export default SettingsScreen;
