@@ -30,6 +30,7 @@ export default function TabsNavigator() {
       <Tab.Screen name="Challenges" component={ChallengesScreen} />
       <Tab.Screen name="Practice" component={PracticeScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Daily" component={DailyChallengeScreen} />
     </Tab.Navigator>
   );
 }
